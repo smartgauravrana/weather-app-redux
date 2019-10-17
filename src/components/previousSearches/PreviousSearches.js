@@ -3,12 +3,11 @@ import './PreviousSearches.css';
 
 const PreviousSearches = ({ pastSearches }) => {
     
-    return (
-        <div className="PreviousSearches">
+    return pastSearches && (<div className="PreviousSearches">
             <p className="past-search-title">Past searches:</p>
             <div className="Search-list-container">
                 {
-                    pastSearches && pastSearches.map((item, index) => (
+                    pastSearches.map((item, index) => (
                         <div 
                             className="list-item"
                             key={index}>
@@ -18,8 +17,7 @@ const PreviousSearches = ({ pastSearches }) => {
                     ))
                 }
             </div>
-            </div> 
-    );    
+            </div>);            
 }
 
 export default PreviousSearches;

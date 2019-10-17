@@ -15,7 +15,10 @@ class App extends Component {
     const pastSearches = localStorage.getItem('pastSearches')?JSON.parse(localStorage.getItem('pastSearches')): null;
     this.state = {
       weatherData: {},
-      searchData: {},
+      searchData: {
+        searchTerm : '',
+        type: 'name'
+      },
       pastSearches: pastSearches
     }
 
@@ -23,8 +26,11 @@ class App extends Component {
     this.fetchResults = debounce(this.fetchResults, 500);
   }
 
-  handleSearch(searchQuery){
-    this.setState({searchData: searchQuery});
+  handleSearch(event){
+    const name = event.target.name;
+    const value = event.target.value;
+    const updatedSearchData = { ...this.state.searchData, [name]: value};
+    this.setState({ searchData: updatedSearchData});
   }
 
   getApiUrl() {    
@@ -77,7 +83,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <SearchComponent handleSearch={this.handleSearch}/>
+        <SearchComponent 
+          type={this.state.searchData.type}
+          value={this.state.searchData.searchTerm}
+          handleSearch={this.handleSearch}/>
         <SearchResult weatherData={this.state.weatherData}/>
         <PreviousSearches pastSearches={this.state.pastSearches}/>
       </div>

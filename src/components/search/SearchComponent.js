@@ -14,24 +14,20 @@ class SearchComponent extends Component {
     }
 
     handleChange(event) {
-        const name = event.target.name;
-        const value = event.target.value;
-        this.setState({ [name] : value}, () => {
-            this.props.handleSearch(this.state);
-        });        
+        this.props.handleSearch(event);  
     }
 
     render(){
-        const placeholder = this.state.type === 'name'? 'e.g. Karnal': (this.state.type === 'location'? 'e.g. 76.91 65.32': 'e.g. 122001');
+        const placeholder = this.props.type === 'name'? 'e.g. Karnal': (this.props.type === 'location'? 'e.g. 76.91 65.32': 'e.g. 122001');
 
         return <p>
                 <input 
                     name="searchTerm" 
                     type="text" 
                     placeholder={placeholder}
-                    value={this.state.searchTerm} 
+                    value={this.props.value} 
                     onChange={this.handleChange}/>
-                <select name="type" value={this.state.type} onChange={this.handleChange}>
+                <select name="type" value={this.props.type} onChange={this.handleChange}>
                     <option value="name">Name</option>
                     <option value="location">Lat/Long</option>
                     <option value="zipcode">ZipCode</option>
