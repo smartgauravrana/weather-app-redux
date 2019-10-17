@@ -22,10 +22,13 @@ class SearchComponent extends Component {
     }
 
     render(){
+        const placeholder = this.state.type === 'name'? 'e.g. Karnal': (this.state.type === 'location'? 'e.g. 76.91 65.32': 'e.g. 122001');
+
         return <p>
                 <input 
                     name="searchTerm" 
                     type="text" 
+                    placeholder={placeholder}
                     value={this.state.searchTerm} 
                     onChange={this.handleChange}/>
                 <select name="type" value={this.state.type} onChange={this.handleChange}>

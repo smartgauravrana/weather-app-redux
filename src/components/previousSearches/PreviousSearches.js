@@ -4,6 +4,8 @@ import './PreviousSearches.css';
 const PreviousSearches = ({ pastSearches }) => {
     
     return (
+        <div className="PreviousSearches">
+            <p className="past-search-title">Past searches:</p>
             <div className="Search-list-container">
                 {
                     pastSearches && pastSearches.map((item, index) => (
@@ -16,6 +18,7 @@ const PreviousSearches = ({ pastSearches }) => {
                     ))
                 }
             </div>
+            </div> 
     );    
 }
 

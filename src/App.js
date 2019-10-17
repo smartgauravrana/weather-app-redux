@@ -3,7 +3,7 @@ import './App.css';
 import SearchComponent from './components/search/SearchComponent';
 import SearchResult from './components/searchResult/SearchResult';
 import PreviousSearches from './components/previousSearches/PreviousSearches';
-import { storeSearches } from './utils/util';
+import { storeSearches, debounce } from './utils/util';
 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 const appid = "ec47d63069c21ed12986935455305b1a"
@@ -20,6 +20,7 @@ class App extends Component {
     }
 
     this.handleSearch = this.handleSearch.bind(this);
+    this.fetchResults = debounce(this.fetchResults, 500);
   }
 
   handleSearch(searchQuery){
@@ -58,10 +59,11 @@ class App extends Component {
             storeSearches(this.state.weatherData);
             this.setPastSearches();
           });
-
+        } else{
+          this.setState({ weatherData: {}});
         }
         },
-        (err) => console.log(err)
+        (err) => {console.log(err)}
       );
   }
 

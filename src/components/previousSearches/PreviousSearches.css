@@ -1,9 +1,8 @@
 .Search-list-container{
     display: flex;
-    flex-direction: row;
-    width: 50%;
-    justify-content: space-around;
-    margin: 0 auto;
+    flex-direction: row;   
+    justify-content: space-between;
+    
 }
 
 .list-item{
@@ -16,4 +15,16 @@
 
 .temp {
     font-weight: bold;
+}
+
+.PreviousSearches {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+
+.past-search-title{
+    text-align: left;
 }
