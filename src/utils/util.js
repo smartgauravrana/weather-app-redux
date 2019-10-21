@@ -24,3 +24,18 @@ export const debounce = (fn, delay) => {
         }, delay);
     };
 }
+
+export const getApiUrl = (searchData) => {
+    const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+    const appid = "ec47d63069c21ed12986935455305b1a";
+    const searchTerm = searchData.searchTerm;
+    let url;
+    if(searchData.type === 'name'){
+      url = `${BASE_URL}?q=${searchTerm}&units=metric&appid=${appid}`;
+      } else if(searchData.type === 'location'){        
+        url = `${BASE_URL}?lat=${searchTerm.split(' ')[0]}&lon=${searchTerm.split(' ')[1]}&units=metric&appid=${appid}`;
+      }else{
+        url = `${BASE_URL}?zip=${searchTerm},in&units=metric&appid=${appid}`;
+      }
+      return url;
+  }

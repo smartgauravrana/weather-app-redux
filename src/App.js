@@ -3,23 +3,19 @@ import './App.css';
 import SearchComponent from './components/search/SearchComponent';
 import SearchResult from './components/searchResult/SearchResult';
 import PreviousSearches from './components/previousSearches/PreviousSearches';
-import { storeSearches, debounce } from './utils/util';
-
-const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
-const appid = "ec47d63069c21ed12986935455305b1a"
+import { debounce } from './utils/util';
+import * as actions from './store/actions/weather';
+import { connect } from 'react-redux';
 
 class App extends Component {
 
   constructor(props){
     super(props);
-    const pastSearches = localStorage.getItem('pastSearches')?JSON.parse(localStorage.getItem('pastSearches')): null;
     this.state = {
-      weatherData: {},
       searchData: {
         searchTerm : '',
         type: 'name'
-      },
-      pastSearches: pastSearches
+      }
     }
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -32,45 +28,9 @@ class App extends Component {
     const updatedSearchData = { ...this.state.searchData, [name]: value};
     this.setState({ searchData: updatedSearchData});
   }
-
-  getApiUrl() {    
-    const searchTerm = this.state.searchData.searchTerm;
-    let url;
-    if(this.state.searchData.type === 'name'){
-      url = `${BASE_URL}?q=${searchTerm}&units=metric&appid=${appid}`;
-      } else if(this.state.searchData.type === 'location'){        
-        url = `${BASE_URL}?lat=${searchTerm.split(' ')[0]}&lon=${searchTerm.split(' ')[1]}&units=metric&appid=${appid}`;
-      }else{
-        url = `${BASE_URL}?zip=${searchTerm},in&units=metric&appid=${appid}`;
-      }
-      return url;
-  }
-
-  setPastSearches(){
-    const pastSearches = JSON.parse(localStorage.getItem('pastSearches'));
-    this.setState({ pastSearches: pastSearches });
-  }
-
+  
   fetchResults() {
-    fetch(this.getApiUrl())
-      .then(res => res.json())
-      .then(
-        (result) => {
-          if(result.cod === 200){
-            this.setState({ weatherData: { 
-            temp: result.main.temp,
-            city: result.name,
-            description: result.weather[0].description
-          }}, () => {
-            storeSearches(this.state.weatherData);
-            this.setPastSearches();
-          });
-        } else{
-          this.setState({ weatherData: {}});
-        }
-        },
-        (err) => {console.log(err)}
-      );
+    this.props.fetchWeather(this.state.searchData);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -83,15 +43,28 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <SearchComponent 
+        <SearchComponent
           type={this.state.searchData.type}
           value={this.state.searchData.searchTerm}
           handleSearch={this.handleSearch}/>
-        <SearchResult weatherData={this.state.weatherData}/>
-        <PreviousSearches pastSearches={this.state.pastSearches}/>
+        <SearchResult weatherData={this.props.weather}/>
+        <PreviousSearches pastSearches={this.props.pastSearches}/>
       </div>
     )
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    weather: state.weather.data,
+    pastSearches: state.weather.pastSearches
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchWeather: (searchData) => dispatch(actions.fetchWeather(searchData))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
