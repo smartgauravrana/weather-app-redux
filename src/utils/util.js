@@ -27,7 +27,7 @@ export const debounce = (fn, delay) => {
 
 export const getApiUrl = (searchData) => {
     const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
-    const appid = "ec47d63069c21ed12986935455305b1a";
+    const appid = process.env.REACT_APP_WEATHER_API_KEY;
     const searchTerm = searchData.searchTerm;
     let url;
     if(searchData.type === 'name'){
